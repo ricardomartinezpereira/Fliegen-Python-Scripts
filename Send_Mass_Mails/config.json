@@ -1,0 +1,6 @@
+{
+    "port" : "<port_here>",
+    "host" : "<host_here>",
+    "username": "<email_here>",
+    "password": "<password_here>"
+}
