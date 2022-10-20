@@ -108,32 +108,42 @@ class SendMassMails:
     
 
 
-try:
+#####         #####         ######         ###   #####      ###
+######       ######        ###  ###        ###   ######     ###
+###  ##     ##  ###       ###    ###       ###   ###  ##    ###
+###   ##   ##   ###      ###      ###      ###   ###   ##   ###
+###    ## ##    ###     ### ###### ###     ###   ###    ##  ###
+###     ###     ###    ###          ###    ###   ###     ## ### 
+###             ###   ###            ###   ###   ###      #####    
 
-  obj = SendMassMails()
+if __name__ == "__main__":
 
-  # subject of the mail
-  subject = "Informacion Importante."
+  try:
 
-  # html content that we will send to the mail
-  html = open("./html_content.html", "r").read()
+    obj = SendMassMails()
 
-  # title of the mail
-  fromm = "Send Mass Email Test"
+    # subject of the mail
+    subject = "Important Information."
 
-  # files attach to the mail
-  files = ["./image.png"]
+    # html content that we will send to the mail
+    html = open("./html_content.html", "r").read()
 
-  # obj.createMailContent(subject, fromm, html, files)
+    # title of the mail
+    fromm = "Send Mass Email Test"
 
-  obj.createMailContent(subject, fromm, html)
+    # files attach to the mail
+    files = ["./image.png"]
 
-  obj.SendMails()
+    # obj.createMailContent(subject, fromm, html, files)
 
-except Exception as e:
-  print("(./html_content.html) file not found!")
-  print(e)
-  exit(0)
+    obj.createMailContent(subject, fromm, html)
+
+    obj.SendMails()
+
+  except FileNotFoundError as e:
+    print("(./html_content.html) file not found!")
+    print(e)
+    exit(0)
 
 
 
