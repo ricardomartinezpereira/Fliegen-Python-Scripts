@@ -1,6 +1,7 @@
 
 from PIL import Image
 from PIL.ExifTags import TAGS
+import exif
 import pdfx
 import os
 
@@ -42,6 +43,7 @@ def get_options():
     option_msg = """TYPE NUMBER OF THE ACTION YOU WANT TO PERFORM?
         \n1- DISPLAY ON THE SCREEN: 
         \n2- SAVE DATA IN A FILE:
+        \n3- DELETE METADATA FROM IMAGES:
         \n>> """
 
     selected_option = input(option_msg)
@@ -95,6 +97,17 @@ def get_metadata_from_pdf(file):
         exit(0)
 
 
+def delete_metadata_img(file):
+    
+    global files_location
+
+    img = exif.Image(open(f"{files_location}{file}", "rb"))
+    img.delete_all()
+    file = open(f"./results/NO_METADATA_{file}", "wb")
+    file.write(img.get_file())
+    file.close()
+
+
 def extract_metadata():
 
     global text
@@ -113,24 +126,20 @@ def extract_metadata():
 
         text += f"\n\n===============  ({file}) METADATA   ===============\n\n"
 
-
         if extension == ".jpg" or extension == ".png":
-
             text += get_metadata_from_images(file)
 
         elif extension == ".pdf":
-
             text += get_metadata_from_pdf(file)
         
         else:
-            print(f"\n=============== EXTENSION ({extension}) NOT SUPPORTED   ===============n")
+            print(f"\n=============== EXTENSION ({extension}) NOT SUPPORTED   ===============\n")
 
 
     # if user option is 1 display data on the screen
     if selected_option.lower() == "1":
         print(text)
         print("===============  END OF PROGRAM   ===============\n")
-
 
     # if user option is 2 creates a file and save data there
     elif selected_option.lower() == "2":
@@ -139,6 +148,24 @@ def extract_metadata():
         f.write(text)
         f.close()
         print("\n===============  EXTRACTION COMPLETED SUCCESSFULLY   ===============\n")
+
+    elif selected_option.lower() == "3":
+        
+        for file in list_of_files:
+
+            # extract the extension of files, example: .jpg, .png, .pdf
+            extension = os.path.splitext(file)[1].lower()
+
+            if extension == ".jpg" or extension == ".png":
+                delete_metadata_img(file)
+
+            elif extension == ".pdf":
+                pass
+
+        
+        print("\n===============  METADATA DELETED  ===============")
+        print("===============  YOUT CAN FIND FILES WITHOUT METADATA IN (./results)   ===============\n")
+        
 
     else:
         print(f"\n===============  OPTION NOT SUPPORTED   ===============\n")
